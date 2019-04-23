@@ -5,9 +5,9 @@ import numpy as np
 
 s = smu.smu()
 
-v = np.linspace(0, 5, 500)
+v = np.linspace(-.1, .1, 1000)
 
-filename = "data/exp1_v2=4.530.csv"
+filename = "data/exp2_part1_v2=3.499.csv"
 measuring = "Vout"
 
 f = open(filename, 'w')
