@@ -3,6 +3,7 @@
 import csv
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.optimize import minimize
 
 """
 Is the response symmetrical? Does the amplifier exhibit approximately
@@ -24,6 +25,16 @@ rates.
 """
 Square wave has amplitude 50mV, offset 3V, freq 5kHz, 50% duty cycle, goes high at t=0
 """
+
+
+def fit(xs, ys, model, initial_params):
+    def err_f(params):
+        return np.mean(np.power(np.log(ys) - np.log(model(xs, params)), 2))
+
+    res = minimize(err_f, x0=initial_params, method="Nelder-Mead")
+    print(res)
+    return res.x
+
 
 # Import data
 T, Vout = [], []
@@ -66,7 +77,17 @@ while Vout[i] > lower_thresh:
     Vout_down += [Vout[i]]
     i += 1
 
+
+# Do curve fits.
+def model(x, params):
+    return np.exp(np.array(x) * params[0] + params[1]) + params[2]
+
+
+p_up = fit(T_up, Vout_up, model, [1, 0, 0])
+p_down = fit(T_down, Vout_down, model, [1, 0, 0])
+
 plt.plot(T, Vin)
 plt.plot(T_up, Vout_up)
 plt.plot(T_down, Vout_down)
+plt.plot(T_up, model(T_up, p_up))
 plt.show()
