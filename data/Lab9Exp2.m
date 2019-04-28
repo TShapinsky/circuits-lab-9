@@ -49,25 +49,25 @@ set(gcf,'color','w');
 xlim([-0.04 0.04]);
 legend('measured','theoretical')
 
-figure 
-plot(Vout2, Iout2, '.');
-grid on;
-hold on;
-plot(Vout2(10:471), theor2, 'r', 'LineWidth', 2);
-xlabel("Vout (Volts)"); 
-ylabel("Iout (Amps)"); 
-title("Current-Voltage Characteristic when Vdm = 0");
-set(gcf,'color','w');
-legend('measured','theoretical')
-
-figure 
-plot(Vout3, Iout3, '.');
-grid on;
-hold on;
-plot(Vout3(10:471), theor3, 'r', 'LineWidth', 2);
-xlabel("Vdm (Volts)"); %Is this right?
-ylabel("Iout (Amps)");
-title("Current-Voltage Characteristic when Vout = 3.5V");
-set(gcf,'color','w');
-legend('measured','theoretical')
-
+% figure 
+% plot(Vout2, Iout2, '.');
+% grid on;
+% hold on;
+% plot(Vout2(10:471), theor2, 'r', 'LineWidth', 2);
+% xlabel("Vout (Volts)"); 
+% ylabel("Iout (Amps)"); 
+% title("Current-Voltage Characteristic when Vdm = 0");
+% set(gcf,'color','w');
+% legend('measured','theoretical')
+% 
+% figure 
+% plot(Vout3, Iout3, '.');
+% grid on;
+% hold on;
+% plot(Vout3(10:471), theor3, 'r', 'LineWidth', 2);
+% xlabel("Vdm (Volts)"); %Is this right?
+% ylabel("Iout (Amps)");
+% title("Current-Voltage Characteristic when Vout = 3.5V");
+% set(gcf,'color','w');
+% legend('measured','theoretical')
+% 
