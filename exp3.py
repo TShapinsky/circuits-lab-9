@@ -29,10 +29,12 @@ Square wave has amplitude 50mV, offset 3V, freq 5kHz, 50% duty cycle, goes high 
 
 def fit(xs, ys, model, initial_params):
     def err_f(params):
-        return np.mean(np.power(np.log(ys) - np.log(model(xs, params)), 2))
+        # return np.mean(np.power(np.log(ys) - np.log(model(xs, params)), 2))
+        return np.mean(np.power(ys - model(xs, params), 2))
 
-    res = minimize(err_f, x0=initial_params, method="Nelder-Mead")
+    res = minimize(err_f, x0=initial_params, method="Nelder-Mead", tol=1e-7)
     print(res)
+    print("Residual error:", err_f(res.x))
     return res.x
 
 
@@ -43,16 +45,16 @@ with open("lab-9-small-waves.csv") as f:
     for _ in range(23):  # Throw away 23 lines of header
         next(c)
     for row in c:
-        T += [float(row[0])]
+        T += [float(row[0]) * 1000]  # seconds to ms
         Vout += [float(row[1])]
 
 # Generate square wave
-Vin = [(3 - 0.05) if np.ceil(t * 5000) % 2 == 0 else (3 + 0.05) for t in T]
+Vin = [(3 - 0.05) if np.ceil(t * 10) % 2 == 0 else (3 + 0.05) for t in T]
 
 # Extract a pair of up- and down-slopes
 T_up, Vout_up, T_down, Vout_down = [], [], [], []
-upper_thresh = 3.00
-lower_thresh = 2.93
+upper_thresh = 3.01
+lower_thresh = 2.92
 
 # TODO: Refactor this?
 i = 0
@@ -80,14 +82,36 @@ while Vout[i] > lower_thresh:
 
 # Do curve fits.
 def model(x, params):
-    return np.exp(np.array(x) * params[0] + params[1]) + params[2]
+    return np.exp((np.array(x) * params[0]) + params[1]) + params[2]
 
 
 p_up = fit(T_up, Vout_up, model, [1, 0, 0])
 p_down = fit(T_down, Vout_down, model, [1, 0, 0])
 
-plt.plot(T, Vin)
-plt.plot(T_up, Vout_up)
-plt.plot(T_down, Vout_down)
-plt.plot(T_up, model(T_up, p_up))
-plt.show()
+
+# Plot things
+fig = plt.figure(figsize=(8, 6))
+ax = plt.subplot(111)
+
+ax.plot(T, Vin, "-", label="Input voltage")
+ax.plot(T, Vout, ".", markersize=2, label="Output voltage")
+ax.plot(
+    T_up,
+    model(T_up, p_up),
+    "-",
+    label="Theoretical fit (upward swing, τ=%g)" % (1 / p_up[0]),
+)
+ax.plot(
+    T_down,
+    model(T_down, p_down),
+    "-",
+    label="Theoretical fit (downward swing, τ=%g)" % (1 / p_down[0]),
+)
+plt.xlim(-0.03, 0.15)
+plt.title("Something")
+plt.xlabel("Time (ms)")
+plt.ylabel("Voltage (V)")
+plt.grid(True)
+ax.legend()
+plt.savefig("exp3_small.pdf")
+plt.cla()
