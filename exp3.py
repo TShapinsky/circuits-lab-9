@@ -43,6 +43,7 @@ T_up, Vout_up, T_down, Vout_down = [], [], [], []
 upper_thresh = 3.00
 lower_thresh = 2.93
 
+# TODO: Refactor this?
 i = 0
 while T[i] < 0:
     i += 1
@@ -51,15 +52,19 @@ while Vout[i] < lower_thresh:
     i += 1
 
 while Vout[i] < upper_thresh:
-    T_up += T[i]
-    Vout_up += Vout[i]
+    T_up += [T[i]]
+    Vout_up += [Vout[i]]
+    i += 1
+
+i += 10  # to avoid jitter causing another trigger
 
 while Vout[i] > upper_thresh:
     i += 1
 
 while Vout[i] > lower_thresh:
-    T_down += T[i]
-    Vout_down += Vout[i]
+    T_down += [T[i]]
+    Vout_down += [Vout[i]]
+    i += 1
 
 plt.plot(T, Vin)
 plt.plot(T_up, Vout_up)
