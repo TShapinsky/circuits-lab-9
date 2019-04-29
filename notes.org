@@ -1,3 +1,7 @@
 * Exp1
 Vb = 0.700
 Ibg = 8.8uA
+
+Second time:
+Vb = .715
+Ibg = 9.0
