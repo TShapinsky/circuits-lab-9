@@ -120,13 +120,13 @@ ax.plot(
     T_up,
     model(T_up, p_up),
     "-",
-    label="Theoretical fit (upward swing, τ=%g)" % (-1 / p_up[0]),
+    label="Theoretical fit (upward swing, τ=%g ms)" % (-1 / p_up[0]),
 )
 ax.plot(
     T_down,
     model(T_down, p_down),
     "-",
-    label="Theoretical fit (downward swing, τ=%g)" % (-1 / p_down[0]),
+    label="Theoretical fit (downward swing, τ=%g ms)" % (-1 / p_down[0]),
 )
 plt.xlim(-0.03, 0.15)
 plt.title("Small-Amplitude Voltage Follower Step Response")
@@ -191,13 +191,13 @@ ax.plot(
     T_up,
     (np.array(T_up) * m_up) + b_up,
     "-",
-    label="Theoretical fit (upward swing, slope=%g)" % m_up,
+    label="Theoretical fit (upward swing, slope=%g V/ms)" % m_up,
 )
 ax.plot(
     T_down,
     (np.array(T_down) * m_down) + b_down,
     "-",
-    label="Theoretical fit (downward swing, slope=%g)" % m_down,
+    label="Theoretical fit (downward swing, slope=%g V/ms)" % m_down,
 )
 plt.xlim(-0.3, 1.5)
 plt.title("Large-Amplitude Voltage Follower Step Response")
