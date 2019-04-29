@@ -150,4 +150,60 @@ with open("lab-9-large-waves.csv") as f:
         Vout += [float(row[1])]
 
 # Generate square wave
-Vin = [(3 - 1) if np.ceil(t * 10) % 2 == 0 else (3 + 1) for t in T]
+Vin = [(3 - 1) if np.ceil(t * 1) % 2 == 0 else (3 + 1) for t in T]
+
+# Extract a pair of up- and down-slopes
+T_up, Vout_up, T_down, Vout_down = [], [], [], []
+upper_thresh = 3.8
+lower_thresh = 2.1
+
+# TODO: Refactor this?
+i = 0
+while T[i] < 0:
+    i += 1
+
+while Vout[i] < lower_thresh:
+    i += 1
+
+while Vout[i] < upper_thresh:
+    # while T[i] < 0.045:
+    T_up += [T[i]]
+    Vout_up += [Vout[i]]
+    i += 1
+
+i += 10  # to avoid jitter causing another trigger
+
+while Vout[i] > upper_thresh:
+    i += 1
+
+while Vout[i] > lower_thresh:
+    T_down += [T[i]]
+    Vout_down += [Vout[i]]
+    i += 1
+
+m_up, b_up = np.polyfit(T_up, Vout_up, 1)
+m_down, b_down = np.polyfit(T_down, Vout_down, 1)
+
+# Plot things
+ax.plot(T, Vin, "-", label="Input voltage")
+ax.plot(T, Vout, ".", markersize=2, label="Output voltage")
+ax.plot(
+    T_up,
+    (np.array(T_up) * m_up) + b_up,
+    "-",
+    label="Theoretical fit (upward swing, slope=%g)" % m_up,
+)
+ax.plot(
+    T_down,
+    (np.array(T_down) * m_down) + b_down,
+    "-",
+    label="Theoretical fit (downward swing, slope=%g)" % m_down,
+)
+plt.xlim(-0.3, 1.5)
+plt.title("Large-Amplitude Voltage Follower Step Response")
+plt.xlabel("Time (ms)")
+plt.ylabel("Voltage (V)")
+plt.grid(True)
+ax.legend()
+plt.savefig("exp3_large.pdf")
+plt.cla()
